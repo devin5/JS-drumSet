@@ -59,11 +59,27 @@
       window.addEventListener("keydown", function(e) {
         // console.log(e.keyCode);
         const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+        const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
         if (!audio) {
-          return;
+          return; //stop the function from playing if tag doesnt exist
         }
-        console.log(audio);
-        audio.play()
+        audio.currentTime = 0; //rewind to start to avoid time lapse
+        // console.log(audio);
+        audio.play();
+        key.classList.add("playing"); // toggle remove
+
+        function removeTransition(e) {
+          // console.log(e)
+          if (e.propertyName !== "transform") {
+            return;
+          }
+          this.classList.remove("playing");
+        }
+
+        const keys = document.querySelectorAll(".key");
+        keys.forEach(key =>
+          key.addEventListener("transitionend", removeTransition)
+        );
       });
     </script>
   </body>
